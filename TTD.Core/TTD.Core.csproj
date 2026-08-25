@@ -13,6 +13,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\TTD.Data\TTD.Data.csproj" />
+		<!-- ← DODAJ TĘ LINIĘ -->
 	</ItemGroup>
 
-</Project>	
+</Project>

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ConsoleApp1.TTD.Data.Models
+namespace TTD.Data.Models
 {
     /// <summary>
     /// Reprezentuje pociąg w systemie.

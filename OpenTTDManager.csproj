@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Include="TTD.Core\TTD.Core.csproj" />
     <None Include="TTD.Data\TTD.Data.csproj" />
+    <None Include="TTD.Main\TTD.Main.csproj" />
   </ItemGroup>
 
   <ItemGroup>

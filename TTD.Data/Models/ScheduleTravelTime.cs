@@ -1,4 +1,4 @@
-namespace ConsoleApp1.TTD.Data.Models
+namespace TTD.Data.Models
 {
     /// <summary>
     /// Reprezentuje czas przejazdu dla konkretnego kursu na danym odcinku trasy.
