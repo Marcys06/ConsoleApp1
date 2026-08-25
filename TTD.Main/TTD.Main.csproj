@@ -3,10 +3,10 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net10.0-windows</TargetFramework>
-		<!-- ← DODAJ "-windows" -->
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWindowsForms>true</UseWindowsForms>
+		<!-- ← TO MUSI BYĆ! -->
 	</PropertyGroup>
 
 	<ItemGroup>

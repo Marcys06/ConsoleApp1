@@ -8,10 +8,25 @@ namespace TTD.Main.UI.Forms
     {
         public Schedule Schedule { get; private set; }
 
+        // ===== DEKLARACJE KONTROLEK =====
+        private Label lblRouteId;
+        private Label lblTrainId;
+        private Label lblDeparture;
+        private Label lblDuration;
+        private Label lblNotes;
+        private NumericUpDown numRouteId;
+        private NumericUpDown numTrainId;
+        private NumericUpDown numDuration;
+        private DateTimePicker dtpDeparture;
+        private CheckBox chkActive;
+        private TextBox txtNotes;
+        private Button btnSave;
+        private Button btnCancel;
+
         public ScheduleEditForm(Schedule? schedule)
         {
             InitializeComponent();
-            
+
             if (schedule != null)
             {
                 Schedule = schedule;
@@ -69,7 +84,7 @@ namespace TTD.Main.UI.Forms
             // Układ
             int y = 30;
             int step = 35;
-            
+
             this.Controls.Add(new Label { Text = "ID Trasy:", Location = new System.Drawing.Point(20, y), Size = new System.Drawing.Size(100, 25) });
             this.Controls.Add(this.numRouteId);
             this.numRouteId.Location = new System.Drawing.Point(130, y);
@@ -117,7 +132,7 @@ namespace TTD.Main.UI.Forms
             numRouteId.Value = Schedule.RouteId;
             numTrainId.Value = Schedule.TrainId;
             dtpDeparture.Value = DateTime.Now.Date.Add(Schedule.DepartureTime);
-            numDuration.Value = Schedule.TravelTime;
+            //numDuration.Value = Schedule.TravelTime;
             chkActive.Checked = Schedule.IsActive;
             txtNotes.Text = Schedule.Notes ?? "";
         }
@@ -127,15 +142,9 @@ namespace TTD.Main.UI.Forms
             Schedule.RouteId = (int)numRouteId.Value;
             Schedule.TrainId = (int)numTrainId.Value;
             Schedule.DepartureTime = dtpDeparture.Value.TimeOfDay;
-            Schedule.TravelTime = (int)numDuration.Value;
+            //Schedule.TravelTime = (int)numDuration.Value;
             Schedule.IsActive = chkActive.Checked;
             Schedule.Notes = txtNotes.Text;
         }
-
-        private NumericUpDown numRouteId, numTrainId, numDuration;
-        private DateTimePicker dtpDeparture;
-        private CheckBox chkActive;
-        private TextBox txtNotes;
-        private Button btnSave, btnCancel;
     }
 }

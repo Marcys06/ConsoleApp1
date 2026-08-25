@@ -20,16 +20,17 @@ namespace TTD.Core.Services
 
         public async Task<IEnumerable<Schedule>> GetAllSchedulesAsync()
         {
-            return await _context.Schedules
+            var schedules = await _context.Schedules
                 .Include(s => s.Route)
                 .Include(s => s.Train)
                 .Include(s => s.TravelTimes)
                     .ThenInclude(tt => tt.RouteStation)
                         .ThenInclude(rs => rs.Station)
-                .OrderBy(s => s.DepartureTime)
                 .ToListAsync();
-        }
 
+            // Sortowanie po pobraniu danych (LINQ to Objects)
+            return schedules.OrderBy(s => s.DepartureTime);
+        }
         public async Task<Schedule?> GetScheduleByIdAsync(int id)
         {
             return await _context.Schedules

@@ -7,14 +7,13 @@ using OpenTTDManager.TTD.Main.Reports;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TTD.Core.Extensions;
 using TTD.Core.Interfaces;
 using TTD.Data;
 using TTD.Main.ConsoleTools;
 using TTD.Main.Database;
 using TTD.Main.UI.Forms;
-using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TTD.Main
 {
@@ -24,7 +23,7 @@ namespace TTD.Main
         private static IHost? _host;
         private static SimpleApiServer? _apiServer;
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.Title = "OpenTTD Manager - Launcher";
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -61,7 +60,7 @@ namespace TTD.Main
                         RunUI();
                         break;
                     case "2":
-                        RunAPI();
+                        await RunAPI();
                         break;
                     case "3":
                         RunConsoleTools();
@@ -70,7 +69,7 @@ namespace TTD.Main
                         RunDatabaseManager();
                         break;
                     case "5":
-                        RunReports();
+                        await RunReports();
                         break;
                     case "0":
                         Console.WriteLine("   Do widzenia! 👋");
@@ -112,28 +111,39 @@ namespace TTD.Main
         {
             try
             {
+                Console.WriteLine("1. Start UI");
                 Console.WriteLine("   🖥️ Uruchamianie interfejsu graficznego...");
                 Console.WriteLine("   (Aby wrócić do launcher'a, zamknij okno aplikacji)");
                 Console.WriteLine();
                 Console.WriteLine("   Naciśnij dowolny klawisz, aby kontynuować...");
                 Console.ReadKey();
 
+                // ===== USTAWIENIA WINDOWS FORMS (PRZED UTWORZENIEM OKNA) =====
+                Console.WriteLine("2. EnableVisualStyles");
+                System.Windows.Forms.Application.EnableVisualStyles();
+
+                Console.WriteLine("3. TextRendering");
+                System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+
+                // ===== TWORZENIE OKNA (PO USTAWIENIACH) =====
+                Console.WriteLine("4. Scope created");
                 using var scope = _serviceProvider!.CreateScope();
+
+                Console.WriteLine("5. MainForm created");
                 var mainForm = new MainForm(scope.ServiceProvider);
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(mainForm);
+
+                System.Windows.Forms.Application.Run(mainForm);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"   ❌ Błąd uruchamiania UI: {ex.Message}");
+                Console.WriteLine($"❌ Błąd uruchamiania UI: {ex.Message}");
                 Console.WriteLine("   Naciśnij dowolny klawisz, aby kontynuować...");
                 Console.ReadKey();
             }
         }
 
         // ===== 2. SERWER API =====
-        static void RunAPI()
+        static async Task RunAPI()
         {
             try
             {
@@ -145,7 +155,7 @@ namespace TTD.Main
                 Console.ReadKey();
 
                 _apiServer = new SimpleApiServer(_serviceProvider!);
-                Task.Run(() => _apiServer.StartAsync("http://localhost:5000/"));
+                await _apiServer.StartAsync("http://localhost:5000/");
 
                 Console.WriteLine("   ✅ Serwer API uruchomiony. Naciśnij dowolny klawisz, aby zatrzymać...");
                 Console.ReadKey();
@@ -258,7 +268,7 @@ namespace TTD.Main
         }
 
         // ===== 5. RAPORTY =====
-        static void RunReports()
+        static async Task RunReports()
         {
             using var scope = _serviceProvider!.CreateScope();
             var trainService = scope.ServiceProvider.GetRequiredService<ITrainService>();
@@ -284,16 +294,16 @@ namespace TTD.Main
                 switch (choice)
                 {
                     case "1":
-                        TrainReport.Execute(trainService).Wait();
+                        await TrainReport.Execute(trainService);
                         break;
                     case "2":
-                        RouteReport.Execute(routeService).Wait();
+                        await RouteReport.Execute(routeService);
                         break;
                     case "3":
-                        ScheduleReport.Execute(scheduleService).Wait();
+                        await ScheduleReport.Execute(scheduleService);
                         break;
                     case "4":
-                        FullReport.Execute(trainService, routeService, scheduleService).Wait();
+                        await FullReport.Execute(trainService, routeService, scheduleService);
                         break;
                     case "0":
                         return;
