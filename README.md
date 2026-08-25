@@ -1,3 +1,14 @@
+Dostępne typy:
+
+Litera	Typ zmiany	Kiedy użyć
+m	MAJOR	Duża zmiana (nowa funkcja, zmiana interfejsu)
+n	MINOR	Mała zmiana (poprawka, optymalizacja)
+p	PATCH	Bardzo mała zmiana (hotfix, literówka)
+f	FIX	Poprawka błędu
+a	ALPHA	 Mała poprawka
+b	BETA	Wersja testowa (stabilniejsza)
+
+powershell -ExecutionPolicy Bypass -File .\UpdateVersion.ps1 m   # MAJOR
 
 ```markdown
 # OpenTTD Manager
