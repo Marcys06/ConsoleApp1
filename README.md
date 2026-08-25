@@ -1,8 +1,3 @@
-## 🚂 OpenTTD Manager – Opis projektu
-
-Poniżej daję Ci **pełny opis projektu OpenTTD Manager** – możesz go użyć jako dokumentację, README na GitHub, lub opis do zaliczenia projektu.
-
----
 
 # OpenTTD Manager
 
@@ -124,9 +119,9 @@ Aplikacja umożliwia:
 
 | Komponent | Technologia |
 |-----------|-------------|
-| **Język** | C# (.NET 8.0) |
-| **Framework** | .NET 8.0 LTS |
-| **ORM** | Entity Framework Core 8.0 |
+| **Język** | C# (.NET 10.0) |
+| **Framework** | .NET 10.0 LTS |
+| **ORM** | Entity Framework Core 10.0.11 |
 | **Baza danych** | SQLite (lokalna) |
 | **Interfejs użytkownika** | Windows Forms / WPF (do wyboru) |
 | **Kontrola wersji** | Git + GitHub |
