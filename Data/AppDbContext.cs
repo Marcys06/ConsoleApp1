@@ -1,4 +1,4 @@
-﻿using ConsoleApp1.Models;
+﻿using ConsoleApp1.Temp;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleApp1.Data;
