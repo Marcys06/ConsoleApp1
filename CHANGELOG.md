@@ -1,0 +1,26 @@
+﻿# CHANGELOG
+
+## [2026.08.25-2049-2.0.0] - 2026-08-25
+
+### TYP ZMIANY: MAJOR
+
+### ZMIANY
+- 
+
+### POPRAWIONE
+- 
+
+---
+## [2026.08.25-2046-1.0.0] - 2026-08-25
+
+### TYP ZMIANY: MAJOR
+
+### ZMIANY
+- 
+
+### POPRAWIONE
+- 
+
+---
+
+
