@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace TTD.Data.Models
 {
     /// <summary>
