@@ -1,20 +1,18 @@
-﻿using ConsoleApp1.Data;
-using ConsoleApp1.Models;
+﻿using System;
+using TTD.Data;
+using TTD.Data.Models;
 
-using var db = new AppDbContext();
-
-db.Database.EnsureCreated();
-
-if (!db.Users.Any())
+class Program
 {
-    db.Users.Add(new User
+    static void Main(string[] args)
     {
-        Name = "Marcel",
-        Email = "marcel@example.com"
-    });
+        Console.WriteLine("OpenTTD Manager - Test połączenia z bazą danych");
 
-    db.SaveChanges();
+        // Test połączenia
+        using var context = new AppDbContext();
+        Console.WriteLine($"Baza danych: {context.Database.ProviderName}");
+
+        Console.WriteLine("Naciśnij dowolny klawisz...");
+        Console.ReadKey(); // <- TO ZATRZYMUJE KONSOLĘ
+    }
 }
-
-Console.WriteLine("Baza danych działa.");
-Console.WriteLine($"Liczba użytkowników: {db.Users.Count()}");
