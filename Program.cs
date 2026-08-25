@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using ConsoleApp1.TTD.Data;
 using Microsoft.EntityFrameworkCore;
-using TTD.Data;
 
 namespace ConsoleApp1
 {
@@ -15,7 +15,7 @@ namespace ConsoleApp1
             Console.WriteLine("Aplikacja do zarządzania rozkładami jazdy");
             Console.WriteLine("");
 
-            // ===== KONFIGURACJA Z PRAWIDŁOWĄ ŚCIEŻKĄ =====
+            // ===== KONFIGURACJA ŚCIEŻKI =====
             string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ttd_database.db");
             Console.WriteLine($"📁 Ścieżka bazy danych: {dbPath}");
             Console.WriteLine("");
@@ -27,10 +27,17 @@ namespace ConsoleApp1
             {
                 try
                 {
-                    // ===== AUTOMATYCZNA MIGRACJA (TWORZY BAZĘ JAK NIE ISTNIEJE) =====
-                    Console.WriteLine("Sprawdzanie bazy danych...");
-                    dbContext.Database.Migrate();
-                    Console.WriteLine("✅ Baza danych jest gotowa.");
+                    // ===== TWORZENIE BAZY DANYCH I TABEL =====
+                    Console.WriteLine("Tworzenie bazy danych i tabel...");
+
+                    // ENSURE CREATED - tworzy tabele na podstawie modeli (BEZ migracji)
+                    bool created = dbContext.Database.EnsureCreated();
+
+                    if (created)
+                        Console.WriteLine("✅ Baza danych i tabele zostały utworzone.");
+                    else
+                        Console.WriteLine("✅ Baza danych już istniała.");
+
                     Console.WriteLine("");
 
                     // ===== TEST POŁĄCZENIA =====
@@ -52,7 +59,6 @@ namespace ConsoleApp1
                     else
                     {
                         Console.WriteLine("❌ Nie można połączyć się z bazą danych.");
-                        Console.WriteLine("   Sprawdź connection string.");
                     }
                 }
                 catch (Exception ex)

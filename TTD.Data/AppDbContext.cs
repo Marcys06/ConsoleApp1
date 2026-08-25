@@ -1,7 +1,7 @@
+using ConsoleApp1.TTD.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using TTD.Data.Models;
 
-namespace TTD.Data
+namespace ConsoleApp1.TTD.Data
 {
     public class AppDbContext : DbContext
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TTD.Data.Models.DTOs
+namespace ConsoleApp1.TTD.Data.Models
 {
     /// <summary>
     /// DTO do wyświetlania szczegółów kursu z obliczonymi czasami.

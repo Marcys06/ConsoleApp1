@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TTD.Data.Models
+namespace ConsoleApp1.TTD.Data.Models
 {
     /// <summary>
     /// Reprezentuje trasę (np. Warszawa ↔ Kraków).
