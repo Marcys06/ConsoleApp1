@@ -9,7 +9,6 @@ namespace TTD.Data
         {
         }
 
-        // DbSet dla każdego modelu
         public DbSet<Train> Trains { get; set; }
         public DbSet<Station> Stations { get; set; }
         public DbSet<Route> Routes { get; set; }
@@ -21,70 +20,72 @@ namespace TTD.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // ===== KONFIGURACJA KLUCZY ZŁOŻONYCH =====
-
-            // RouteStation - klucz złożony (RouteId + StationId + StopOrder)
+            // ===== RouteStation =====
+            // Id jest kluczem głównym
             modelBuilder.Entity<RouteStation>()
-                .HasKey(rs => new { rs.RouteId, rs.StationId, rs.StopOrder });
+                .HasKey(rs => rs.Id);
 
-            // ===== KONFIGURACJA RELACJI =====
+            // Unikalność złożenia RouteId + StationId + StopOrder
+            modelBuilder.Entity<RouteStation>()
+                .HasIndex(rs => new { rs.RouteId, rs.StationId, rs.StopOrder })
+                .IsUnique()
+                .HasDatabaseName("IX_RouteStation_Unique");
 
-            // Route -> RouteStation (1 : wiele)
+            // ===== RELACJE =====
+
+            // Route -> RouteStation
             modelBuilder.Entity<RouteStation>()
                 .HasOne(rs => rs.Route)
                 .WithMany(r => r.RouteStations)
                 .HasForeignKey(rs => rs.RouteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Station -> RouteStation (1 : wiele)
+            // Station -> RouteStation
             modelBuilder.Entity<RouteStation>()
                 .HasOne(rs => rs.Station)
                 .WithMany(s => s.RouteStations)
                 .HasForeignKey(rs => rs.StationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Route -> Schedule (1 : wiele)
+            // Route -> Schedule
             modelBuilder.Entity<Schedule>()
                 .HasOne(s => s.Route)
                 .WithMany(r => r.Schedules)
                 .HasForeignKey(s => s.RouteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Train -> Schedule (1 : wiele)
+            // Train -> Schedule
             modelBuilder.Entity<Schedule>()
                 .HasOne(s => s.Train)
                 .WithMany(t => t.Schedules)
                 .HasForeignKey(s => s.TrainId)
-                .OnDelete(DeleteBehavior.Restrict); // Nie można usunąć pociągu, który ma kursy
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Schedule -> ScheduleTravelTime (1 : wiele)
+            // Schedule -> ScheduleTravelTime
             modelBuilder.Entity<ScheduleTravelTime>()
                 .HasOne(st => st.Schedule)
                 .WithMany(s => s.TravelTimes)
                 .HasForeignKey(st => st.ScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // RouteStation -> ScheduleTravelTime (1 : wiele)
+            // RouteStation -> ScheduleTravelTime (poprawione!)
             modelBuilder.Entity<ScheduleTravelTime>()
                 .HasOne(st => st.RouteStation)
                 .WithMany(rs => rs.ScheduleTravelTimes)
-                .HasForeignKey(st => st.RouteStationId)
+                .HasForeignKey(st => st.RouteStationId)  // ← teraz celuje w RouteStation.Id
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // ===== KONFIGURACJA INDEKSÓW =====
+            // ===== INDEKSY =====
 
-            // Unikalność kursów na tej samej trasie o tej samej godzinie
             modelBuilder.Entity<Schedule>()
                 .HasIndex(s => new { s.RouteId, s.DepartureTime })
                 .IsUnique()
                 .HasDatabaseName("IX_Schedule_Route_Departure");
 
-            // Indeks dla TrainId (przyspiesza wyszukiwanie)
             modelBuilder.Entity<Schedule>()
                 .HasIndex(s => s.TrainId)
                 .HasDatabaseName("IX_Schedule_TrainId");
 
-            // Indeks dla StopOrder (przyspiesza sortowanie)
             modelBuilder.Entity<RouteStation>()
                 .HasIndex(rs => rs.StopOrder)
                 .HasDatabaseName("IX_RouteStation_StopOrder");
