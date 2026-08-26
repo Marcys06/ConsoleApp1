@@ -7,6 +7,8 @@ namespace TTD.Data.Models
         public int Id { get; set; }  // ← TO MUSI BYĆ!
         
         public int RouteId { get; set; }
+        public int TrackId { get; set; } = 1;
+        public int? PlatformId { get; set; }
         public int StationId { get; set; }
         public int StopOrder { get; set; }
         public int StopDuration { get; set; }

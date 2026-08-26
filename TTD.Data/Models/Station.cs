@@ -8,6 +8,7 @@ namespace TTD.Data.Models
     public class Station
     {
         public int Id { get; set; }
+        public int PlatformCount { get; set; } = 2;
 
         /// <summary>
         /// Nazwa stacji (np. "Warszawa Centralna").

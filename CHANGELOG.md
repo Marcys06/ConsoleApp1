@@ -1,5 +1,25 @@
 ﻿# CHANGELOG
 
+## [2026.08.26-1152-1.2.1] - 2026-08-26
+
+
+### TYP ZMIANY: PATCH
+
+### DODANE
+- Migracja bazy danych z polami `PlatformCount`, `TrackId`, `PlatformId`
+- DesignTimeDbContextFactory dla migracji EF Core
+- Obsługa peronów i torów (przygotowanie)
+
+### ZMIENIONE
+- AppDbContext - dodanie konstruktora bezparametrowego i OnConfiguring
+- Modele Station i RouteStation - nowe pola
+
+### POPRAWIONE
+- Błąd migracji "No database provider configured"
+- Błąd "table already exists"
+- Błąd "no such column: PlatformId"
+
+---
 ## [2026.08.26-1129-1.2.0] - 2026-08-26
 
 ### TYP ZMIANY: MINOR
@@ -60,6 +80,7 @@
 - 
 
 ---
+
 
 
 

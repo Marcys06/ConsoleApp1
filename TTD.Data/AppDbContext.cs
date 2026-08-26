@@ -1,11 +1,12 @@
-using TTD.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using TTD.Data.Models;
 
 namespace TTD.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
         {
         }
 
@@ -20,18 +21,26 @@ namespace TTD.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // ===== RouteStation =====
-            // Id jest kluczem głównym
+            // =========================================================
+            // RouteStation
+            // =========================================================
+
             modelBuilder.Entity<RouteStation>()
                 .HasKey(rs => rs.Id);
 
-            // Unikalność złożenia RouteId + StationId + StopOrder
             modelBuilder.Entity<RouteStation>()
-                .HasIndex(rs => new { rs.RouteId, rs.StationId, rs.StopOrder })
+                .HasIndex(rs => new
+                {
+                    rs.RouteId,
+                    rs.StationId,
+                    rs.StopOrder
+                })
                 .IsUnique()
                 .HasDatabaseName("IX_RouteStation_Unique");
 
-            // ===== RELACJE =====
+            // =========================================================
+            // RELACJE
+            // =========================================================
 
             // Route -> RouteStation
             modelBuilder.Entity<RouteStation>()
@@ -68,17 +77,23 @@ namespace TTD.Data
                 .HasForeignKey(st => st.ScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // RouteStation -> ScheduleTravelTime (poprawione!)
+            // RouteStation -> ScheduleTravelTime
             modelBuilder.Entity<ScheduleTravelTime>()
                 .HasOne(st => st.RouteStation)
                 .WithMany(rs => rs.ScheduleTravelTimes)
-                .HasForeignKey(st => st.RouteStationId)  // ← teraz celuje w RouteStation.Id
+                .HasForeignKey(st => st.RouteStationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // ===== INDEKSY =====
+            // =========================================================
+            // INDEKSY
+            // =========================================================
 
             modelBuilder.Entity<Schedule>()
-                .HasIndex(s => new { s.RouteId, s.DepartureTime })
+                .HasIndex(s => new
+                {
+                    s.RouteId,
+                    s.DepartureTime
+                })
                 .IsUnique()
                 .HasDatabaseName("IX_Schedule_Route_Departure");
 
@@ -89,6 +104,18 @@ namespace TTD.Data
             modelBuilder.Entity<RouteStation>()
                 .HasIndex(rs => rs.StopOrder)
                 .HasDatabaseName("IX_RouteStation_StopOrder");
+
+            // =========================================================
+            // DOMYŚLNE WARTOŚCI
+            // =========================================================
+
+            modelBuilder.Entity<RouteStation>()
+                .Property(rs => rs.TrackId)
+                .HasDefaultValue(1);
+
+            modelBuilder.Entity<Station>()
+                .Property(s => s.PlatformCount)
+                .HasDefaultValue(2);
         }
     }
 }
