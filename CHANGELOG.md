@@ -1,5 +1,33 @@
 ﻿# CHANGELOG
 
+## [2026.08.26-1230-1.2.2] - 2026-08-26
+
+### TYP ZMIANY: MINOR
+
+### DODANE
+- **Dodawanie wielu kursów naraz** - możliwość dodania wielu kursów jednocześnie
+- **Generowanie regularnych kursów** - tworzenie kursów co X minut (np. co 30 minut)
+- **Dodawanie nieregularnych kursów** - ręczne wpisywanie czasów (np. 8:00, 8:30, 9:15)
+- **Podgląd kursów przed zapisem** - tabela z wygenerowanymi kursami
+- **Automatyczne pomijanie duplikatów** - pomija kursy, które już istnieją
+- **BatchScheduleForm** - nowe okno do dodawania wielu kursów
+- **Przycisk "📋 Dodaj wiele"** - w ScheduleForm
+
+### ZMIENIONE
+- ScheduleForm - rozszerzenie okna na 850x500
+- ScheduleForm - dodanie przycisku "Dodaj wiele"
+
+### POPRAWIONE
+- Uszkodzony tekst przycisku "Dodaj wiele"
+- Brak widoczności przycisku "Dodaj wiele"
+
+### TECHNICZNE
+- Dodanie `BatchScheduleForm.cs`
+- Modyfikacja `ScheduleForm.cs`
+- Dodanie metody `BtnBatchAdd_Click`
+
+---
+
 ## [2026.08.26-1204-1.2.2-beta] - 2026-08-26
 
 ### TYP ZMIANY: BETA
