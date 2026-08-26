@@ -10,10 +10,12 @@ namespace TTD.Main.UI.Forms
     public partial class RouteForm : Form
     {
         private readonly IRouteService _routeService;
+        private readonly IServiceProvider _serviceProvider; // ⭐ DODAJ
         private Route? _selectedRoute;
 
         public RouteForm(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider; // ⭐ ZAPISZ
             _routeService = serviceProvider.GetRequiredService<IRouteService>();
             InitializeComponent();
             LoadRoutes();
@@ -86,27 +88,35 @@ namespace TTD.Main.UI.Forms
 
         private async void LoadRoutes()
         {
-            var routes = await _routeService.GetAllRoutesAsync();
-            
-            if (!string.IsNullOrEmpty(txtSearch.Text))
+            try
             {
-                routes = routes.Where(r => r.Name.Contains(txtSearch.Text, StringComparison.OrdinalIgnoreCase));
+                var routes = await _routeService.GetAllRoutesAsync();
+
+                if (!string.IsNullOrEmpty(txtSearch.Text))
+                {
+                    routes = routes.Where(r => r.Name.Contains(txtSearch.Text, StringComparison.OrdinalIgnoreCase));
+                }
+
+                dgvRoutes.DataSource = null;
+                dgvRoutes.DataSource = routes.Select(r => new
+                {
+                    r.Id,
+                    r.Name,
+                    Aktywna = r.IsActive ? "Tak" : "Nie",
+                    LiczbaStacji = r.RouteStations?.Count ?? 0
+                }).ToList();
+
+                if (dgvRoutes.Columns.Contains("Id"))
+                    dgvRoutes.Columns["Id"].Visible = false;
+
+                dgvRoutes.ClearSelection();
+                _selectedRoute = null;
             }
-
-            dgvRoutes.DataSource = null;
-            dgvRoutes.DataSource = routes.Select(r => new
+            catch (Exception ex)
             {
-                r.Id,
-                r.Name,
-                Aktywna = r.IsActive ? "Tak" : "Nie",
-                LiczbaStacji = r.RouteStations?.Count ?? 0
-            }).ToList();
-
-            if (dgvRoutes.Columns.Contains("Id"))
-                dgvRoutes.Columns["Id"].Visible = false;
-
-            dgvRoutes.ClearSelection();
-            _selectedRoute = null;
+                MessageBox.Show($"Błąd ładowania tras: {ex.Message}", "Błąd",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void SelectRoute()
@@ -118,34 +128,52 @@ namespace TTD.Main.UI.Forms
             }
         }
 
+        // ⭐ POPRAWIONE - przekazuje ServiceProvider
         private async void BtnAdd_Click(object sender, EventArgs e)
         {
-            var form = new RouteEditForm(null);
-            if (form.ShowDialog() == DialogResult.OK)
+            try
             {
-                await _routeService.AddRouteAsync(form.Route);
-                LoadRoutes();
+                var form = new RouteEditForm(null, _serviceProvider); // ⭐ DODAJ _serviceProvider
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    await _routeService.AddRouteAsync(form.Route);
+                    LoadRoutes();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Błąd dodawania trasy: {ex.Message}", "Błąd",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+        // ⭐ POPRAWIONE - przekazuje ServiceProvider
         private async void BtnEdit_Click(object sender, EventArgs e)
         {
             if (_selectedRoute == null)
             {
-                MessageBox.Show("Wybierz trasę do edycji.", "Informacja", 
+                MessageBox.Show("Wybierz trasę do edycji.", "Informacja",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            var route = await _routeService.GetRouteByIdAsync(_selectedRoute.Id);
-            if (route != null)
+            try
             {
-                var form = new RouteEditForm(route);
-                if (form.ShowDialog() == DialogResult.OK)
+                var route = await _routeService.GetRouteByIdAsync(_selectedRoute.Id);
+                if (route != null)
                 {
-                    await _routeService.UpdateRouteAsync(form.Route);
-                    LoadRoutes();
+                    var form = new RouteEditForm(route, _serviceProvider); // ⭐ DODAJ _serviceProvider
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        await _routeService.UpdateRouteAsync(form.Route);
+                        LoadRoutes();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Błąd edycji trasy: {ex.Message}", "Błąd",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -153,18 +181,26 @@ namespace TTD.Main.UI.Forms
         {
             if (_selectedRoute == null)
             {
-                MessageBox.Show("Wybierz trasę do usunięcia.", "Informacja", 
+                MessageBox.Show("Wybierz trasę do usunięcia.", "Informacja",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            var result = MessageBox.Show($"Czy na pewno chcesz usunąć wybraną trasę?", 
+            var result = MessageBox.Show($"Czy na pewno chcesz usunąć wybraną trasę?",
                 "Potwierdzenie", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (result == DialogResult.Yes)
             {
-                await _routeService.DeleteRouteAsync(_selectedRoute.Id);
-                LoadRoutes();
+                try
+                {
+                    await _routeService.DeleteRouteAsync(_selectedRoute.Id);
+                    LoadRoutes();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Błąd usuwania trasy: {ex.Message}", "Błąd",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
