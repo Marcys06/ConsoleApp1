@@ -21,6 +21,7 @@ namespace TTD.Main.UI.Forms
         private Button btnRefresh = null!;
         private Button btnDetails = null!;
         private Button btnGenerateAll = null!;
+        private Button btnBatchAdd = null!;
         private ComboBox cbRouteFilter = null!;
         private Label lblRouteFilter = null!;
         private ComboBox cbTrainFilter = null!;
@@ -48,6 +49,7 @@ namespace TTD.Main.UI.Forms
             this.btnRefresh = new Button();
             this.btnDetails = new Button();
             this.btnGenerateAll = new Button();
+            this.btnBatchAdd = new Button();
             this.cbRouteFilter = new ComboBox();
             this.lblRouteFilter = new Label();
             this.cbTrainFilter = new ComboBox();
@@ -73,39 +75,45 @@ namespace TTD.Main.UI.Forms
             this.btnAdd.Location = new System.Drawing.Point(20, 420);
             this.btnAdd.Size = new System.Drawing.Size(100, 35);
             this.btnAdd.BackColor = System.Drawing.Color.LightGreen;
-            this.btnAdd.Visible = true;        // ⭐ DODAJ
-            this.btnAdd.Enabled = true;        // ⭐ DODAJ
             this.btnAdd.Click += BtnAdd_Click!;
+
+            // ===== btnBatchAdd =====
+            this.btnBatchAdd.Text = "Dodaj wiele";
+            this.btnBatchAdd.Location = new System.Drawing.Point(130, 420);
+            this.btnBatchAdd.Size = new System.Drawing.Size(100, 35);
+            this.btnBatchAdd.BackColor = System.Drawing.Color.LightBlue;
+            this.btnBatchAdd.Click += BtnBatchAdd_Click!;
+
             // ===== btnEdit =====
             this.btnEdit.Text = "✏️ Edytuj";
-            this.btnEdit.Location = new System.Drawing.Point(130, 420);
+            this.btnEdit.Location = new System.Drawing.Point(240, 420);
             this.btnEdit.Size = new System.Drawing.Size(100, 35);
             this.btnEdit.BackColor = System.Drawing.Color.LightYellow;
             this.btnEdit.Click += BtnEdit_Click!;
 
             // ===== btnDelete =====
             this.btnDelete.Text = "🗑️ Usuń";
-            this.btnDelete.Location = new System.Drawing.Point(240, 420);
+            this.btnDelete.Location = new System.Drawing.Point(350, 420);
             this.btnDelete.Size = new System.Drawing.Size(100, 35);
             this.btnDelete.BackColor = System.Drawing.Color.LightCoral;
             this.btnDelete.Click += BtnDelete_Click!;
 
             // ===== btnRefresh =====
             this.btnRefresh.Text = "🔄 Odśwież";
-            this.btnRefresh.Location = new System.Drawing.Point(350, 420);
+            this.btnRefresh.Location = new System.Drawing.Point(460, 420);
             this.btnRefresh.Size = new System.Drawing.Size(100, 35);
             this.btnRefresh.Click += (s, e) => _ = LoadSchedulesAsync();
 
             // ===== btnDetails =====
             this.btnDetails.Text = "📋 Szczegóły";
-            this.btnDetails.Location = new System.Drawing.Point(460, 420);
+            this.btnDetails.Location = new System.Drawing.Point(570, 420);
             this.btnDetails.Size = new System.Drawing.Size(100, 35);
             this.btnDetails.BackColor = System.Drawing.Color.LightBlue;
             this.btnDetails.Click += BtnDetails_Click!;
 
             // ===== btnGenerateAll =====
             this.btnGenerateAll.Text = "⚡ Generuj wszystkie";
-            this.btnGenerateAll.Location = new System.Drawing.Point(570, 420);
+            this.btnGenerateAll.Location = new System.Drawing.Point(680, 420);
             this.btnGenerateAll.Size = new System.Drawing.Size(120, 35);
             this.btnGenerateAll.BackColor = System.Drawing.Color.LightGoldenrodYellow;
             this.btnGenerateAll.Click += BtnGenerateAll_Click!;
@@ -151,13 +159,14 @@ namespace TTD.Main.UI.Forms
 
             // ===== ScheduleForm =====
             this.Text = "🕐 Zarządzanie rozkładami";
-            this.Size = new System.Drawing.Size(800, 500);
+            this.Size = new System.Drawing.Size(850, 500);
             this.StartPosition = FormStartPosition.CenterParent;
-            this.MinimumSize = new System.Drawing.Size(800, 500);
+            this.MinimumSize = new System.Drawing.Size(850, 500);
 
             // Dodaj kontrolki
             this.Controls.Add(this.dgvSchedules);
             this.Controls.Add(this.btnAdd);
+            this.Controls.Add(this.btnBatchAdd);
             this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnRefresh);
@@ -317,7 +326,7 @@ namespace TTD.Main.UI.Forms
             }
         }
 
-        // ===== DODAWANIE KURSU =====
+        // ===== DODAWANIE KURSU (POJEDYNCZY) =====
         private async void BtnAdd_Click(object sender, EventArgs e)
         {
             try
@@ -334,6 +343,26 @@ namespace TTD.Main.UI.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Błąd dodawania kursu: {ex.Message}", "Błąd",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // ===== DODAWANIE WIELU KURSÓW =====
+        private async void BtnBatchAdd_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var form = new BatchScheduleForm(_serviceProvider);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    await LoadSchedulesAsync();
+                    MessageBox.Show($"✅ Dodano {form.GeneratedSchedules.Count} kursów!",
+                        "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Błąd dodawania wielu kursów: {ex.Message}", "Błąd",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

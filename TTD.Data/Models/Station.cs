@@ -3,12 +3,11 @@ using System.Collections.Generic;
 namespace TTD.Data.Models
 {
     /// <summary>
-    /// Reprezentuje stację kolejową.
+    /// Reprezentuje stację kolejową w OpenTTD.
     /// </summary>
     public class Station
     {
         public int Id { get; set; }
-        public int PlatformCount { get; set; } = 2;
 
         /// <summary>
         /// Nazwa stacji (np. "Warszawa Centralna").
@@ -16,24 +15,16 @@ namespace TTD.Data.Models
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// Szerokość geograficzna (lub koordynata X na mapie).
+        /// Współrzędna X na mapie OpenTTD (w tile'ach).
+        /// Zakres: 0-16383 (dla mapy 16k x 16k).
         /// </summary>
-        public double Latitude { get; set; }
+        public int TileX { get; set; }
 
         /// <summary>
-        /// Długość geograficzna (lub koordynata Y na mapie).
+        /// Współrzędna Y na mapie OpenTTD (w tile'ach).
+        /// Zakres: 0-16383 (dla mapy 16k x 16k).
         /// </summary>
-        public double Longitude { get; set; }
-
-        /// <summary>
-        /// Koordynata X na mapie OpenTTD (opcjonalna).
-        /// </summary>
-        public int? MapX { get; set; }
-
-        /// <summary>
-        /// Koordynata Y na mapie OpenTTD (opcjonalna).
-        /// </summary>
-        public int? MapY { get; set; }
+        public int TileY { get; set; }
 
         /// <summary>
         /// Czy stacja obsługuje pasażerów.
@@ -44,6 +35,12 @@ namespace TTD.Data.Models
         /// Czy stacja obsługuje towary.
         /// </summary>
         public bool IsCargo { get; set; }
+
+        /// <summary>
+        /// Liczba peronów na stacji.
+        /// Domyślnie: 2.
+        /// </summary>
+        public int PlatformCount { get; set; } = 2;
 
         // ===== RELACJE =====
 
