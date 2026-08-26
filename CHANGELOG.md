@@ -1,5 +1,27 @@
 ﻿# CHANGELOG
 
+## [2026.08.26-1204-1.2.2-beta] - 2026-08-26
+
+### TYP ZMIANY: BETA
+
+### DODANE
+- Struktura projektów TTD.Main, TTD.Core, TTD.Data
+- Konfiguracja Windows Forms dla .NET 10
+- Referencje między projektami
+
+### ZMIENIONE
+- Pliki .csproj - konfiguracja i struktura
+- Usunięcie OpenTTDManager.csproj
+- Uproszczenie zależności NuGet
+
+### POPRAWIONE
+- Błędy Windows Forms
+- Błędy duplikatów Assembly
+- Błędy XML w .csproj
+- Problemy z budowaniem i artefaktami
+- Wykrywanie projektu startowego
+
+---
 ## [2026.08.26-1152-1.2.1] - 2026-08-26
 
 
@@ -80,6 +102,7 @@
 - 
 
 ---
+
 
 
 
